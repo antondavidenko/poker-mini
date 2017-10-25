@@ -1,0 +1,22 @@
+[
+	{
+		"pockets": [["Ts", "Js"],["Ts", "Js"],["Ts", "Js"],["Ts", "Js"],["Ts", "Js"]],		
+		"table": ["7h", "2d", "Qs", "Ks", "As"]
+	},{
+		"pockets": [["Ts", "Js"],["3d", "3c"],["5s", "4s"],["5h", "Kh"],["Ad", "6d"]],		
+		"table": ["7h", "2d", "Qs", "Ks", "As"]
+	},{
+		"pockets": [["Ah", "Qd"],["Ts", "Js"],["7d", "5s"],["2s", "3h"],["Jh", "6d"]],		
+		"table": ["Ks", "2d", "Qs", "9s", "7h"]
+	},{
+		"pockets": [["2s", "6d"],["5s", "Ks"],["Ah", "Js"],["Ts", "7d"],["Qd", "3h"]],		
+		"table": ["As", "Ad", "7s", "Ac", "7h"]
+
+	},{
+		"pockets": [["Ks", "8d"],["Th", "Jh"],["5s", "Kd"],["Ah", "7d"],["Ts", "Js"]],
+		"table": ["As", "Ad", "7s", "Kc", "7h"]
+	},{
+		"pockets": [["3h", "3d"],["Qd", "Js"],["Th", "Jh"],["Tc", "Jd"],["7s", "As"]],
+		"table": ["7h", "2d", "Qs", "Ks", "As"]
+	}	
+]

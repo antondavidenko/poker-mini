@@ -1,0 +1,93 @@
+<!doctype html>
+<head>
+<meta charset="utf-8">
+<title>POKER-MINI GAME</title>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-108511491-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-108511491-1');
+</script>
+</head>
+
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="./lib/pixi.js"></script>
+
+<script src="./mvcs/controller/doNextStepCommand.js"></script>
+
+<script src="./mvcs/view/pokerView.js"></script>
+<script src="./mvcs/view/pokerAnimation.js"></script>
+
+<script src="./mvcs/service/pokerUtils.js"></script>
+<script src="./mvcs/service/handUtils.js"></script>
+
+<script src="./mvcs/model/gameModel.js"></script>
+<script src="./mvcs/model/deckModel.js"></script>
+<script src="./mvcs/model/playerModel.js"></script>
+
+<link rel="stylesheet" href="main.css" type="text/css">
+<script>
+	var pageURL = window.location.href;
+	var bebug = (pageURL.indexOf("debug")>0);
+	var pv = new PokerView();
+	var gm = new GameModel(bebug);
+	var pa = new PokerAnimation(pv);
+	var pm = new PlayerModel();
+	
+	var app = new PIXI.Application(950, 654, { backgroundColor: 0x0f141a });
+	document.body.appendChild(app.view);
+		
+	PIXI.loader
+		.add('img/cards.json')
+		.add('img/avatars.json')
+		.add('img/allchecks.json')
+		.load(onAssetsLoaded);	
+
+	app.ticker.add(function(delta) {
+		pa.animationTicker(delta);
+	});		
+	
+	window.onload = function() {
+		resize();
+	}	
+	
+	function resize()
+	{
+		var w = window.innerWidth;
+		var h = window.innerHeight;
+		
+		var multiplayer = ((w/950)<(h/654))?(w/950):(h/654);
+		
+		app.renderer.view.style.height = 654*multiplayer + "px"; 
+		app.renderer.view.style.width = 950*multiplayer + "px";
+		app.renderer.view.style.position = 'absolute';
+		app.renderer.view.style.left = ((window.innerWidth - 950*multiplayer)/2) + 'px';
+		app.renderer.view.style.top = ((window.innerHeight - 654*multiplayer) /2) + 'px';
+	}
+	
+	window.addEventListener('resize', resize);
+	
+	function onAssetsLoaded()
+	{
+		$.getJSON("predifined.json", function(json) {
+			gm.predifined = (bebug)?json:[];
+			gm.setupGame();
+		});
+	
+		pv.renderTable(gm.getViewData(), pm.getPlayerInfo(), tablecallback);
+		ga('send', 'event', 'MINI-POKER-V3', 'PLAY', 'START-GAME');
+	}
+
+	function tablecallback(data)
+	{
+		doNextStepCommand.call(this, gm, pm, data);
+		pv.renderTable(gm.getViewData(), pm.getPlayerInfo(), tablecallback);
+	}
+</script>
+</div>
+</body>
+
+

@@ -1,0 +1,12 @@
+canvas { 
+	padding: 0px;
+}
+
+body {
+	background-color: #0f141a;
+	margin: 0px;
+}
+
+body::-webkit-scrollbar { width: 0 !important }
+body { -ms-overflow-style: none; }
+body { overflow: -moz-scrollbars-none; }

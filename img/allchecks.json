@@ -1,0 +1,65 @@
+{"frames": {
+"winner.png":
+{
+	"frame": {"x":0,"y":0,"w":155,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":0,"w":155,"h":251},
+	"sourceSize": {"w":155,"h":251},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"qmark.png":
+{
+	"frame": {"x":155,"y":0,"w":155,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":0,"w":155,"h":251},
+	"sourceSize": {"w":155,"h":251},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"selectedw.png":
+{
+	"frame": {"x":310,"y":0,"w":155,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":0,"w":155,"h":251},
+	"sourceSize": {"w":155,"h":251},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"selectedr.png":
+{
+	"frame": {"x":0,"y":251,"w":155,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":0,"w":155,"h":251},
+	"sourceSize": {"w":155,"h":251},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"selectedg.png":
+{
+	"frame": {"x":155,"y":251,"w":155,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":0,"w":155,"h":251},
+	"sourceSize": {"w":155,"h":251},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"empty.png":
+{
+	"frame": {"x":310,"y":251,"w":155,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":0,"w":155,"h":251},
+	"sourceSize": {"w":155,"h":251},
+	"pivot": {"x":0.5,"y":0.5}
+}
+},
+"meta": {
+	"app": "http://antondavidenko.com/",
+	"version": "1.0",
+	"image": "allchecks.png",
+	"format": "RGBA8888",
+	"size": {"w":384,"h":640},
+	"scale": "1"
+}
+}
