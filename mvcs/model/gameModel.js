@@ -1,7 +1,7 @@
 var GameModel = function()
 {
 	this.hand = {pockets:[], table:[]}
-	this.buttonStates = ["deal","check","check","check","redeal"];
+	this.buttonStates = ["btn_deal","btn_check","btn_check","btn_check","btn_redeal"];
 	this.stepStates = ["","Pre-flop","Flop","Turn","River",""]; //Showdown
 	this.currentState = 0;
 	this.currentHand = 0;

@@ -3,7 +3,7 @@
 <meta charset="utf-8">
 <title>POKER-MINI GAME</title>
 <!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-108511491-1"></script>
+<script async src="https://www.googletagameModelanager.com/gtag/js?id=UA-108511491-1"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -15,6 +15,7 @@
 <body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="./lib/pixi.js"></script>
+<script src="./lib/sceneBuilder.js"></script>
 
 <script src="./mvcs/controller/doNextStepCommand.js"></script>
 
@@ -32,10 +33,10 @@
 <script>
 	var pageURL = window.location.href;
 	var bebug = (pageURL.indexOf("debug")>0);
-	var pv = new PokerView();
-	var gm = new GameModel(bebug);
-	var pa = new PokerAnimation(pv);
-	var pm = new PlayerModel();
+	var pokerView;// = new PokerView();
+	var gameModel = new GameModel(bebug);
+	var pokerAnimation = new PokerAnimation(pokerView);
+	var playerModel = new PlayerModel();
 	
 	var app = new PIXI.Application(950, 654, { backgroundColor: 0x0f141a });
 	document.body.appendChild(app.view);
@@ -43,13 +44,9 @@
 	PIXI.loader
 		.add('img/cards.json')
 		.add('img/avatars.json')
-		.add('img/allchecks.json')
+		.add('img/ui.json')
 		.load(onAssetsLoaded);	
 
-	app.ticker.add(function(delta) {
-		pa.animationTicker(delta);
-	});		
-	
 	window.onload = function() {
 		resize();
 	}	
@@ -72,22 +69,32 @@
 	
 	function onAssetsLoaded()
 	{
-		$.getJSON("predifined.json", function(json) {
-			gm.predifined = (bebug)?json:[];
-			gm.setupGame();
-		});
+		$.getJSON("predifined.json", onPredifinedLoaded);
+	}
 	
-		pv.renderTable(gm.getViewData(), pm.getPlayerInfo(), tablecallback);
-		ga('send', 'event', 'MINI-POKER-V3', 'PLAY', 'START-GAME');
+	function onPredifinedLoaded(predifinedJSON)
+	{
+		gameModel.predifined = (bebug)?predifinedJSON:[];
+		gameModel.setupGame();
+		$.getJSON("./mvcs/view/pokerScene.json", onSceneLoaded);
+	}
+	
+	function onSceneLoaded(sceneJSON)
+	{
+		pokerView = new sceneBuilder(new PokerView(), sceneJSON);
+		pokerView.init(tablecallback);
+		pokerView.renderTable(gameModel.getViewData(), playerModel.getPlayerInfo());
+
+		app.ticker.add(function(delta) {
+			pokerAnimation.animationTicker(delta, pokerView);
+		});		
 	}
 
 	function tablecallback(data)
 	{
-		doNextStepCommand.call(this, gm, pm, data);
-		pv.renderTable(gm.getViewData(), pm.getPlayerInfo(), tablecallback);
+		doNextStepCommand.call(this, gameModel, playerModel, data);
+		pokerView.renderTable(gameModel.getViewData(), playerModel.getPlayerInfo());
 	}
 </script>
 </div>
 </body>
-
-

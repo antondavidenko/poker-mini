@@ -1,26 +1,35 @@
-var PokerAnimation = function(view)
+var PokerAnimation = function()
 {
-	this.view = view;
+	this.view;
 	this.previousState;
 	this.ticker = 0;
 	this.delta = 0;
 	this.deckX = 860;
 	this.deckY = 20;
 //-------------------------------------------------------------------	
-	this.animationTicker = function(delta)
+	this.animationTicker = function(delta, view)
 	{
-		this.delta = delta;
-		this.ticker = (this.previousState == this.view.animationState)?(this.ticker + delta):(0);
-		this.previousState = this.view.animationState;
-	
-		if (this.view.animationState == 1)
+		if (view !== undefined)
 		{
-			this.scenario1();
-		} else
-		if (this.view.animationState == 5)
-		{
-			this.scenario5();
-		} 
+			this.view = view;
+		
+			this.delta = delta;
+			this.ticker = (this.previousState == this.view.animationState)?(this.ticker + delta):(0);
+			this.previousState = this.view.animationState;
+		
+			if (this.view.animationState == 1)
+			{
+				this.scenario1();
+			} else
+			if (this.view.animationState == 2)
+			{
+				this.scenario2();
+			} 			
+			if (this.view.animationState == 5)
+			{
+				this.scenario5();
+			} 
+		}
 	}
 //-------------------------------------------------------------------		
 	this.animationTween = function(object,param,startCount,duration,startValue,finalValue)
@@ -49,34 +58,67 @@ var PokerAnimation = function(view)
 //-------------------------------------------------------------------	
 	this.scenario1 = function()
 	{
-		this.flyFromDeck(this.view.cards[5],  1, 40, (128 + 25)*0 + 5, 550)
-		this.flyFromDeck(this.view.cards[6], 11, 40, (128 + 25)*0 +70, 550)
+		this.flyFromDeck(this.view.scene["card6"],  1, 40, (128 + 25)*0 + 5, 550)
+		this.flyFromDeck(this.view.scene["card7"], 11, 40, (128 + 25)*0 +70, 550)
 		
-		this.flyFromDeck(this.view.cards[7], 21, 40, (128 + 25)*1 + 5, 550)
-		this.flyFromDeck(this.view.cards[8], 31, 40, (128 + 25)*1 +70, 550)
+		this.flyFromDeck(this.view.scene["card8"], 21, 40, (128 + 25)*1 + 5, 550)
+		this.flyFromDeck(this.view.scene["card9"], 31, 40, (128 + 25)*1 +70, 550)
 
-		this.flyFromDeck(this.view.cards[9], 41, 40, (128 + 25)*2 + 5, 550)
-		this.flyFromDeck(this.view.cards[10],51, 40, (128 + 25)*2 +70, 550)
+		this.flyFromDeck(this.view.scene["card10"], 41, 40, (128 + 25)*2 + 5, 550)
+		this.flyFromDeck(this.view.scene["card11"],51, 40, (128 + 25)*2 +70, 550)
 
-		this.flyFromDeck(this.view.cards[11],61, 40, (128 + 25)*3 + 5, 550)
-		this.flyFromDeck(this.view.cards[12],71, 40, (128 + 25)*3 +70, 550)
+		this.flyFromDeck(this.view.scene["card12"],61, 40, (128 + 25)*3 + 5, 550)
+		this.flyFromDeck(this.view.scene["card13"],71, 40, (128 + 25)*3 +70, 550)
 
-		this.flyFromDeck(this.view.cards[13],81, 40, (128 + 25)*4 + 5, 550)
-		this.flyFromDeck(this.view.cards[14],91, 40, (128 + 25)*4 +70, 550)		
+		this.flyFromDeck(this.view.scene["card14"],81, 40, (128 + 25)*4 + 5, 550)
+		this.flyFromDeck(this.view.scene["card15"],91, 40, (128 + 25)*4 +70, 550)		
 		
-		this.flyFromDeck(this.view.cards[4],161, 20, 650, 100);
-		this.flyFromDeck(this.view.cards[3],151, 20, 550, 100);
-		this.flyFromDeck(this.view.cards[2],141, 20, 450, 100);
-		this.flyFromDeck(this.view.cards[1],131, 20, 350, 100);
-		this.flyFromDeck(this.view.cards[0],121, 20, 250, 100);
+		this.flyFromDeck(this.view.scene["card1"],161, 20, 650, 100);
+		this.flyFromDeck(this.view.scene["card2"],151, 20, 550, 100);
+		this.flyFromDeck(this.view.scene["card3"],141, 20, 450, 100);
+		this.flyFromDeck(this.view.scene["card4"],131, 20, 350, 100);
+		this.flyFromDeck(this.view.scene["card5"],121, 20, 250, 100);
 	}
+//-------------------------------------------------------------------	
+	this.setXY = function(obj, x, y)
+	{
+		obj.x = x;
+		obj.y = y;
+	}
+
+	this.scenario2 = function()
+	{
+		if (this.ticker<3)
+		{
+			this.setXY(this.view.scene["card1"], 650, 100);
+			this.setXY(this.view.scene["card2"], 550, 100);
+			this.setXY(this.view.scene["card3"], 450, 100);
+			this.setXY(this.view.scene["card4"], 350, 100);
+			this.setXY(this.view.scene["card5"], 250, 100);
+				
+			this.setXY(this.view.scene["card6"], 5, 550);
+			this.setXY(this.view.scene["card7"], 70, 550);
+				
+			this.setXY(this.view.scene["card8"], 158, 550);
+			this.setXY(this.view.scene["card9"], 223, 550);
+				
+			this.setXY(this.view.scene["card10"], 311, 550);
+			this.setXY(this.view.scene["card11"], 376, 550);
+
+			this.setXY(this.view.scene["card12"], 464, 550);
+			this.setXY(this.view.scene["card13"], 529, 550);
+
+			this.setXY(this.view.scene["card14"], 617, 550);
+			this.setXY(this.view.scene["card15"], 682, 550);
+		}
+	}	
 //-------------------------------------------------------------------
 	this.scenario5 = function()
 	{
-		this.animationTween(this.view.cards[15], "alpha",  1, 50 ,0 ,0.5);
-		this.animationTween(this.view.cards[16], "alpha", 21, 50 ,0 ,0.5);
-		this.animationTween(this.view.cards[17], "alpha", 41, 50 ,0 ,0.5);
-		this.animationTween(this.view.cards[18], "alpha", 51, 50 ,0 ,0.5);
-		this.animationTween(this.view.cards[19], "alpha", 81, 50 ,0 ,0.5);
+		this.animationTween(this.view.scene["card16"], "alpha",  1, 50 ,0 ,0.5);
+		this.animationTween(this.view.scene["card17"], "alpha", 21, 50 ,0 ,0.5);
+		this.animationTween(this.view.scene["card18"], "alpha", 41, 50 ,0 ,0.5);
+		this.animationTween(this.view.scene["card19"], "alpha", 51, 50 ,0 ,0.5);
+		this.animationTween(this.view.scene["card20"], "alpha", 81, 50 ,0 ,0.5);
 	}
 }

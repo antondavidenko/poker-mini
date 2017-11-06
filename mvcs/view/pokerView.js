@@ -1,242 +1,192 @@
 var PokerView = function()
 {
 	this.animationState = 0;
-	this.cards = [];
-	this.qmarks = [];
-	this.button;
 	this.chosenId = -1;
-	this.frame;
-//-----------------------------------------------------------------------------
-	this.drawCard = function(cont,id,x,y,alpha)
-	{
-		if (alpha === undefined) {
-			alpha = 1;
-		}
-		var card = PIXI.Sprite.fromImage(id);
-		card.y = y;  
-		card.x = x;
-		card.scale.x *= 1/2;
-		card.scale.y *= 1/2;
-		card.alpha = alpha;	
-		cont.addChild(card);
-		
-		return card;
-	}	
 //-----------------------------------------------------------------------------	
-	this.getCardId = function(cardId)
+	this.updateAllCards = function(renderData)
 	{
-		res = cardId;
-		
-		if (cardId === undefined) {
-			cardId = "card-back-red";
-		}
-		
-		return cardId+".png";
-	}
-//-----------------------------------------------------------------------------	
-	this.drawAvatars = function(container, renderData)
-	{
-		var emotions = [];
-		if (renderData.stateNum == 5)
-		{
-			emotions = ["","lose","lose","lose","lose","lose"];
-			for (i=1; i<=5; i++)
-			{
-				if (renderData.winnerId.toString().indexOf(i)>-1)
-				{
-					emotions[i] = "win";
-				}
-			}
-		}
-		else
-		{
-			emotions = ["","ingame","ingame","ingame","ingame","ingame"];
-		}
+		this.scene["card1"].texture = this.getCardTexture(renderData.table[4]);
+		this.scene["card2"].texture = this.getCardTexture(renderData.table[3]);
+		this.scene["card3"].texture = this.getCardTexture(renderData.table[2]);
+		this.scene["card4"].texture = this.getCardTexture(renderData.table[1]);
+		this.scene["card5"].texture = this.getCardTexture(renderData.table[0]);
 	
-		var i;
-		for (i=1; i<=5; i++)
+		this.scene["card6"].texture = this.getCardTexture(renderData.pockets[0][0]);
+		this.scene["card7"].texture = this.getCardTexture(renderData.pockets[0][1]);
+
+		this.scene["card8"].texture = this.getCardTexture(renderData.pockets[1][0]);
+		this.scene["card9"].texture = this.getCardTexture(renderData.pockets[1][1]);
+
+		this.scene["card10"].texture = this.getCardTexture(renderData.pockets[2][0]);
+		this.scene["card11"].texture = this.getCardTexture(renderData.pockets[2][1]);
+
+		this.scene["card12"].texture = this.getCardTexture(renderData.pockets[3][0]);
+		this.scene["card13"].texture = this.getCardTexture(renderData.pockets[3][1]);
+
+		this.scene["card14"].texture = this.getCardTexture(renderData.pockets[4][0]);
+		this.scene["card15"].texture = this.getCardTexture(renderData.pockets[4][1]);
+
+		if	(renderData.stateNum != 5)
 		{
-			var avatar = PIXI.Sprite.fromImage(i+emotions[i]+'.jpg');
-			avatar.x = 10+(128+25)*(i-1);
-			avatar.y = 420;
-			container.addChild(avatar);
-		}
-	}		
-//-----------------------------------------------------------------------------	
-	this.drawFrames = function(container, renderData, playerData)
+			this.scene["card16"].visible = false;
+			this.scene["card17"].visible = false;
+			this.scene["card18"].visible = false;
+			this.scene["card19"].visible = false;
+			this.scene["card20"].visible = false;
+		} else {
+			this.scene["card16"].visible = true;
+			this.scene["card17"].visible = true;
+			this.scene["card18"].visible = true;
+			this.scene["card19"].visible = true;
+			this.scene["card20"].visible = true;
+
+			this.scene["card16"].texture = this.getCardTexture(renderData.strongest[0]);
+			this.scene["card17"].texture = this.getCardTexture(renderData.strongest[1]);
+			this.scene["card18"].texture = this.getCardTexture(renderData.strongest[2]);
+			this.scene["card19"].texture = this.getCardTexture(renderData.strongest[3]);
+			this.scene["card20"].texture = this.getCardTexture(renderData.strongest[4]);
+		}		
+	}
+	
+	this.getCardTexture = function(id)
+	{
+		id = (id !== undefined)?id:"card-back";
+		return this.textures[id];
+	}
+//-----------------------------------------------------------------------------
+	this.updateFrames = function(renderData, playerData)
 	{
 		var frame;
-		var frameId;
-		this.qmarks = [];
+		var textureId;
 		
-		if (renderData.choseStep)
-		{		
-			for (i=1; i<=5; i++)
+		for (i=1; i<=5; i++)
+		{
+			frame = this.scene["qmark"+i];
+			frame.visible = renderData.choseStep;
+			if (renderData.choseStep) 
 			{
-				frame = PIXI.Sprite.fromImage('qmark.png');
-				frame.x = 10-13+(128+25)*(i-1);;
-				frame.y = 420-13;		
-				frame.interactive = true;
-				frame.buttonMode = true;
-				frame.on('pointerdown', onQmarkClick);
-				frame.nameId = i;
-				frame.viewContext = this;
-				container.addChild(frame);
-				this.qmarks.push(frame);
-
-				frame = PIXI.Sprite.fromImage('empty.png');
-				frame.x = 10-13+(128+25)*(i-1);;
-				frame.y = 420-13;		
-				frame.interactive = true;
-				frame.buttonMode = true;
-				frame.on('pointerdown', onQmarkClick);
-				frame.nameId = i;
-				frame.viewContext = this;
-				container.addChild(frame);
-			}		
-		} else 
+				frame.texture = this.textures["qmark"];
+			}
+		}
+		
+		this.scene["frame"].visible = (playerData.selectedId>0);
 		if (renderData.stateNum == 5)
 		{
-			frameId = (renderData.winnerId.toString().indexOf(playerData.selectedId)>-1)?"selectedg":"selectedr";
-			frame = PIXI.Sprite.fromImage(frameId+'.png');
-			frame.x = 10-13+(128+25)*(playerData.selectedId-1);;
-			frame.y = 420-13;		
-			container.addChild(frame);
-		} 
-		else if (playerData.selectedId>0) 
+			textureId = (renderData.winnerId.toString().indexOf(playerData.selectedId)>-1)?"selectedg":"selectedr";
+			this.scene["frame"].texture = this.textures[textureId];
+		}		
+	}
+//-----------------------------------------------------------------------------
+	this.updateAvatars = function(renderData)
+	{
+		var frame;
+		var textureId;
+		
+		for (i=1; i<=5; i++)
 		{
-			frame = PIXI.Sprite.fromImage('selectedw.png');
-			frame.x = 10-13+(128+25)*(playerData.selectedId-1);
-			this.chosenId = playerData.selectedId;
-			frame.y = 420-13;		
-			container.addChild(frame);
-		}			
+			frame = this.scene["avatar"+i];
+			if (renderData.stateNum == 5) 
+			{
+				textureId = (renderData.winnerId.toString().indexOf(i)>-1)?"win":"lose";			
+				frame.texture = this.textures[i+textureId];
+			} else {
+				frame.texture = this.textures[i+"ingame"];
+			}
+		}
+	}
+//-----------------------------------------------------------------------------
+	this.updateWinner = function(renderData)
+	{
+		var frame;
+	
+		for (i=1; i<=5; i++)
+		{	
+			frame = this.scene["winner"+i];
+			if	(renderData.stateNum != 5)
+			{
+				frame.visible = false;
+			} else {
+				frame.visible = (renderData.winnerId.toString().indexOf(i)>-1);
+			}
+		}
+	}	
+//-----------------------------------------------------------------------------	
+	this.initQmarks = function()
+	{
+		var frame;
+		
+		for (i=1; i<=5; i++)
+		{
+			frame = this.scene["qmark"+i];
+			frame.interactive = true;
+			frame.buttonMode = true;
+			frame.on('pointerdown', onQmarkClick);
+			frame.nameId = i;
+			frame.viewContext = this;
+		}		
 
 		function onQmarkClick() 
 		{
-			if (this.viewContext.frame == undefined ) {
-				this.viewContext.frame = PIXI.Sprite.fromImage('selectedw.png');
-				this.viewContext.frame.y = 420-13;		
-			}
-			this.viewContext.frame.x = 10-13+(128+25)*(this.nameId-1);
-			container.addChild(this.viewContext.frame);
+			this.viewContext.scene["frame"].visible = true;
+			this.viewContext.scene["frame"].texture = this.viewContext.textures["selectedw"];
+			this.viewContext.scene["frame"].x = 10-13+(128+25)*(this.nameId-1);
 
-			this.viewContext.button.interactive = true;
-			this.viewContext.button.buttonMode = true;
-			this.viewContext.button.alpha = 1;
+			this.viewContext.scene["button"].interactive = true;
+			this.viewContext.scene["button"].buttonMode = true;
+			this.viewContext.scene["button"].alpha = 1;
 			this.viewContext.chosenId = this.nameId;
 			
 			var i;
-			for (i=0; i<5; i++)
-			{
-				this.viewContext.qmarks[i].visible = false;
-			}				
-		}
-	}
-//-----------------------------------------------------------------------------	
-	this.drawWinner = function(container, renderData)
-	{
-		var winner;
-		if (renderData.stateNum == 5)
-		{		
 			for (i=1; i<=5; i++)
 			{
-				if (renderData.winnerId.toString().indexOf(i)>-1)
-				{
-					winner = PIXI.Sprite.fromImage('winner.png');
-					winner.x = 10-13+(128+25)*(i-1);;
-					winner.y = 420-13;
-					container.addChild(winner);						
-				}
-			}		
-		}
-	}
-//-----------------------------------------------------------------------------	
-	this.drawAllCards = function(container, renderData)
-	{
-		this.drawCard(container,this.getCardId(undefined),860,20)		
-
-		this.cards.push(this.drawCard(container,this.getCardId(renderData.table[4]),650,100));
-		this.cards.push(this.drawCard(container,this.getCardId(renderData.table[3]),550,100));
-		this.cards.push(this.drawCard(container,this.getCardId(renderData.table[2]),450,100));
-		this.cards.push(this.drawCard(container,this.getCardId(renderData.table[1]),350,100));
-		this.cards.push(this.drawCard(container,this.getCardId(renderData.table[0]),250,100));	
-
-		for (i=0; i<5; i++)
-		{
-			this.cards.push(this.drawCard(container,this.getCardId(renderData.pockets[i][0]),(128 + 25)*i + 5,550));	
-			this.cards.push(this.drawCard(container,this.getCardId(renderData.pockets[i][1]),(128 + 25)*i + 70,550));			
-		}
-		
-		if (renderData.stateNum == 5)
-		{
-			this.cards.push(this.drawCard(container,this.getCardId(renderData.strongest[4]),650,230, 0.5));
-			this.cards.push(this.drawCard(container,this.getCardId(renderData.strongest[3]),550,230, 0.5));
-			this.cards.push(this.drawCard(container,this.getCardId(renderData.strongest[2]),450,230, 0.5));
-			this.cards.push(this.drawCard(container,this.getCardId(renderData.strongest[1]),350,230, 0.5));
-			this.cards.push(this.drawCard(container,this.getCardId(renderData.strongest[0]),250,230, 0.5));
-			
-			var basicText = new PIXI.Text(renderData.handComboId+"\n                                                           ",{fill:0xFFFFFF, align:'center'});
-			basicText.x = 270;
-			basicText.y = 200;
-			container.addChild(basicText);			
+				this.viewContext.scene["qmark"+i].texture = this.viewContext.textures["empty"];
+			}
 		}
 	}	
-//-----------------------------------------------------------------------------	
-	this.renderTable = function(renderData, playerData, btn_callback)
+//-----------------------------------------------------------------------------
+	this.init = function(btn_callback)
 	{
-		this.chosenId = -1;
+		app.stage.addChild(this.container);
 
-		this.animationState = renderData.stateNum;
-		this.cards = [];
+		this.initQmarks();
 		
-		var container = new PIXI.Container();
-		app.stage.addChild(container);	
-	
-		var table = PIXI.Sprite.fromImage('img/table_blank.png');
-		table.scale.x *= 2;
-		table.scale.y *= 2;	
-		container.addChild(table);
-		
-		this.button =  PIXI.Sprite.fromImage('img/btn_'+renderData.buttonState+'.png');
-		this.button.x = 790;
-		this.button.y = 550;	
-		container.addChild(this.button);	
-		
-		this.drawWinner(container, renderData);
-		
-		this.drawAvatars(container, renderData);
-		
-		this.drawAllCards(container, renderData);
-		
-		this.drawFrames(container, renderData, playerData);
-		
-		var basicText = new PIXI.Text('GAME '+renderData.handNum+'\n'+renderData.stateLabel,{fill:0xFFFFFF, align:'center'});
-		basicText.x = 800;
-		basicText.y = 480;
-		container.addChild(basicText);
-		
-		var basicText = new PIXI.Text('WIN IN A ROW: '+playerData.winsInARow+'\nRANK: '+playerData.rankLabel,{fill:0xFFFFFF, align:'left'});
-		basicText.x = 10;
-		basicText.y = 10;
-		container.addChild(basicText);		
-
-		if (renderData.choseStep)
-		{		
-			this.button.alpha = 0.5;
-		} else 
-		{
-			this.button.interactive = true;
-			this.button.buttonMode = true;			
-		}
-		this.button.on('pointerdown', onClick);
-		this.button.viewContext = this;
+		this.scene["button"].interactive = true;
+		this.scene["button"].buttonMode = true;		
+		this.scene["button"].on('pointerdown', onClick);
+		this.scene["button"].viewContext = this;
 
 		function onClick () 
 		{
 			btn_callback.call(this, this.viewContext.chosenId);
-			container.removeChildren();
-			container.destroy();
+		}
+	}
+//-----------------------------------------------------------------------------
+	this.renderTable = function(renderData, playerData)
+	{
+		this.chosenId = (playerData.selectedId>0)?playerData.selectedId:-1;
+
+		this.animationState = renderData.stateNum;
+		
+		this.updateWinner(renderData);
+		this.updateAvatars(renderData);
+		this.updateAllCards(renderData);
+		this.updateFrames(renderData, playerData);			
+
+		this.scene["button"].texture = this.textures[renderData.buttonState];
+		this.scene["bottomText"].text = 'GAME '+renderData.handNum+'\n'+renderData.stateLabel;
+		this.scene["topText"].text = 'WIN IN A ROW: '+playerData.winsInARow+'\nRANK: '+playerData.rankLabel;
+		this.scene["comboText"].text = (renderData.stateNum == 5)?renderData.handComboId+"\n                                                           ":"";
+		
+					
+		if (renderData.choseStep)
+		{		
+			this.scene["button"].alpha = 0.5;
+			this.scene["button"].interactive = false;
+			this.scene["button"].buttonMode = false;				
+		} else 
+		{
+			this.scene["button"].interactive = true;
+			this.scene["button"].buttonMode = true;			
 		}
 	}
 }

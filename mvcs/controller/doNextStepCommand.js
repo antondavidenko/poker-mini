@@ -1,29 +1,28 @@
-doNextStepCommand = function (gm,pm,selectedId)
+doNextStepCommand = function (gameModel,playerModel,selectedId)
 {
-	pm.selectedId = selectedId;
-	gm.currentState++;
+	playerModel.selectedId = selectedId;
+	gameModel.currentState++;
 	
-	if ( ((gm.currentState == 1)&&(pm.rankId == 2)) || 
-		 ((gm.currentState == 2)&&(pm.rankId == 1)) ||
-	     ((gm.currentState == 3)&&(pm.rankId == 0)) )
+	if ( ((gameModel.currentState == 1)&&(playerModel.rankId == 2)) || 
+		 ((gameModel.currentState == 2)&&(playerModel.rankId == 1)) ||
+	     ((gameModel.currentState == 3)&&(playerModel.rankId == 0)) )
 	{
-		gm.choseStep = true;
+		gameModel.choseStep = true;
 	} else 
 	{
-		gm.choseStep = false;
+		gameModel.choseStep = false;
 	}
 
-	if (gm.currentState >= 5)
+	if (gameModel.currentState >= 5)
 	{
-		ga('send', 'event', 'MINI-POKER-V3', 'PLAY', 'START-GAME');
-		gm.currentState=0;
-		gm.currentHand++;
-		gm.setupGame();
+		gameModel.currentState=0;
+		gameModel.currentHand++;
+		gameModel.setupGame();
+		playerModel.selectedId = -1;
 	}
 	
-	if (gm.currentState == 4)
+	if (gameModel.currentState == 4)
 	{
-		pm.winsInARow = (gm.winnerId.toString().indexOf(pm.selectedId)>-1)?(pm.winsInARow+1):(0);
-		ga('send', 'event', 'MINI-POKER-V3', 'PLAY', 'WIN-IN-A-ROW-'+pm.winsInARow);
+		playerModel.winsInARow = (gameModel.winnerId.toString().indexOf(playerModel.selectedId)>-1)?(playerModel.winsInARow+1):(0);
 	}	
 }
